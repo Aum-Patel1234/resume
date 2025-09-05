@@ -1,0 +1,449 @@
+\documentclass[10pt, letterpaper]{article}
+
+% Packages:
+\usepackage[
+    ignoreheadfoot, % set margins without considering header and footer
+    top=2 cm, % seperation between body and page edge from the top
+    bottom=2 cm, % seperation between body and page edge from the bottom
+    left=2 cm, % seperation between body and page edge from the left
+    right=2 cm, % seperation between body and page edge from the right
+    footskip=1.0 cm, % seperation between body and footer
+    % showframe % for debugging 
+]{geometry} % for adjusting page geometry
+\usepackage{titlesec} % for customizing section titles
+\usepackage{tabularx} % for making tables with fixed width columns
+\usepackage{array} % tabularx requires this
+\usepackage[dvipsnames]{xcolor} % for coloring text
+\definecolor{primaryColor}{RGB}{0, 79, 144} % define primary color
+\usepackage{enumitem} % for customizing lists
+\usepackage{fontawesome5} % for using icons
+\usepackage{amsmath} % for math
+\usepackage{graphicx}
+\usepackage[
+    pdftitle={Aum Patel's CV},
+    pdfauthor={Aum Patel},
+    pdfcreator={LaTeX with RenderCV},
+    colorlinks=true,
+    urlcolor=primaryColor
+]{hyperref} % for links, metadata and bookmarks
+\usepackage[pscoord]{eso-pic} % for floating text on the page
+\usepackage{calc} % for calculating lengths
+\usepackage{bookmark} % for bookmarks
+\usepackage{lastpage} % for getting the total number of pages
+\usepackage{changepage} % for one column entries (adjustwidth environment)
+\usepackage{tikz}
+\usepackage{paracol} % for two and three column entries
+\usepackage{ifthen} % for conditional statements
+\usepackage{needspace} % for avoiding page brake right after the section title
+\usepackage{iftex} % check if engine is pdflatex, xetex or luatex
+
+% Ensure that generate pdf is machine readable/ATS parsable:
+\ifPDFTeX
+    \input{glyphtounicode}
+    \pdfgentounicode=1
+    % \usepackage[T1]{fontenc} % this breaks sb2nov
+    \usepackage[utf8]{inputenc}
+    \usepackage{lmodern}
+\fi
+
+
+
+% Some settings:
+\AtBeginEnvironment{adjustwidth}{\partopsep0pt} % remove space before adjustwidth environment
+\pagestyle{empty} % no header or footer
+\setcounter{secnumdepth}{0} % no section numbering
+\setlength{\parindent}{0pt} % no indentation
+\setlength{\topskip}{0pt} % no top skip
+\setlength{\columnsep}{0cm} % set column seperation
+\makeatletter
+\let\ps@customFooterStyle\ps@plain % Copy the plain style to customFooterStyle
+\patchcmd{\ps@customFooterStyle}{\thepage}{
+    \color{gray}\textit{\small Aum Patel - Page \thepage{} of \pageref*{LastPage}}
+}{}{} % replace number by desired string
+\makeatother
+% \pagestyle{customFooterStyle} % page 1 of 2
+
+\titleformat{\section}{\needspace{4\baselineskip}\bfseries\large}{}{0pt}{}[\vspace{1pt}\titlerule]
+
+\titlespacing{\section}{
+    % left space:
+    -1pt
+}{
+    % top space:
+    0.1 cm
+}{
+    % bottom space:
+    0.2 cm
+} % section title spacing
+
+\renewcommand\labelitemi{$\circ$} % custom bullet points
+\newenvironment{highlights}{
+    \begin{itemize}[
+        topsep=0.10 cm,
+        parsep=0.10 cm,
+        partopsep=0pt,
+        itemsep=0pt,
+        leftmargin=0.4 cm + 10pt
+    ]
+}{
+    \end{itemize}
+} % new environment for highlights
+
+\newenvironment{highlightsforbulletentries}{
+    \begin{itemize}[
+        topsep=0.10 cm,
+        parsep=0.10 cm,
+        partopsep=0pt,
+        itemsep=0pt,
+        leftmargin=10pt
+    ]
+}{
+    \end{itemize}
+} % new environment for highlights for bullet entries
+
+
+\newenvironment{onecolentry}{
+    \begin{adjustwidth}{
+        0.2 cm + 0.00001 cm
+    }{
+        0.2 cm + 0.00001 cm
+    }
+}{
+    \end{adjustwidth}
+} % new environment for one column entries
+
+\newenvironment{twocolentry}[2][]{
+    \onecolentry
+    \def\secondColumn{#2}
+    \setcolumnwidth{\fill, 4.5 cm}
+    \begin{paracol}{2}
+}{
+    \switchcolumn \raggedleft \secondColumn
+    \end{paracol}
+    \endonecolentry
+} % new environment for two column entries
+
+\newenvironment{header}{
+    \setlength{\topsep}{0pt}\par\kern\topsep\centering\linespread{1.5}
+}{
+    \par\kern\topsep
+} % new environment for the header
+
+\newcommand{\placelastupdatedtext}{}
+
+% save the original href command in a new command:
+\let\hrefWithoutArrow\href
+
+% new command for external links:
+\renewcommand{\href}[2]{\hrefWithoutArrow{#1}{\ifthenelse{\equal{#2}{}}{ }{#2 }\raisebox{.15ex}{\footnotesize \faExternalLink*}}}
+
+
+% \begin{document}
+%     \newcommand{\AND}{\unskip
+%         \cleaders\copy\ANDbox\hskip\wd\ANDbox
+%         \ignorespaces
+%     }
+%     \newsavebox\ANDbox
+%     \sbox\ANDbox{}
+
+%     \placelastupdatedtext
+%     \begin{header}
+%         \textbf{\fontsize{24 pt}{24 pt}\selectfont Aum Patel}
+
+%         \vspace{0.3 cm}
+
+%         \normalsize
+%         \mbox{{\color{black}\footnotesize\faMapMarker*}\hspace*{0.13cm}Chembur,Mumbai}%
+%         \kern 0.25 cm%
+%         \AND%
+%         \kern 0.25 cm%
+%         \mbox{\hrefWithoutArrow{mailto:aumpatel131@gmail.com}{\color{black}{\footnotesize\faEnvelope[regular]}\hspace*{0.13cm}aumpatel131@gmail.com}}%
+%         \kern 0.25 cm%
+%         \AND%
+%         % \kern 0.25 cm%
+%         % \mbox{\hrefWithoutArrow{https://yourwebsite.com/}{\color{black}{\footnotesize\faLink}\hspace*{0.13cm}yourwebsite.com}}%
+%         % \kern 0.25 cm%
+%         \AND%
+%         \kern 0.25 cm%
+%         \mbox{\hrefWithoutArrow{https://linkedin.com/in/aum-patel-48025a2bb}{\color{black}{\footnotesize\faLinkedinIn}\hspace*{0.13cm}Aum Patel}}%
+%         \kern 0.25 cm%
+%         \AND%
+%         \kern 0.25 cm%
+%         \mbox{\hrefWithoutArrow{https://github.com/Aum-Patel1234}{\color{black}{\footnotesize\faGithub}\hspace*{0.13cm}Github}}%
+%         \kern 0.25 cm%
+%         \AND%
+%         \kern 0.25 cm%
+%         \mbox{\hrefWithoutArrow{https://leetcode.com/u/Aum-Jayraj-Patel/}{\color{black}{\footnotesize\faLaptopCode}\hspace*{0.13cm}Leetcode}}%
+%         \kern 0.25 cm%
+
+
+%     \end{header}
+\documentclass{article}
+\usepackage{graphicx}
+\usepackage[margin=1in]{geometry}
+\usepackage{xcolor}
+\usepackage{fontawesome5}
+\usepackage[hidelinks]{hyperref}
+
+\begin{document}
+
+\newcommand{\AND}{\unskip
+    \cleaders\hbox{\hskip0.5em\vrule height 0pt\hskip0.5em}\hfill
+    \ignorespaces
+}
+
+\noindent
+\begin{minipage}[t]{0.75\textwidth}
+    \vspace{0pt} % Ensures top alignment
+    {\fontsize{24pt}{24pt}\selectfont \textbf{Aum Patel}}\\[0.3cm]
+
+    {\footnotesize
+        \faMapMarker*~Chembur, Mumbai\quad\AND\quad
+        \faEnvelope[regular]~\href{mailto:aumpatel131@gmail.com}{aumpatel131@gmail.com}\quad\AND\quad
+        \faLinkedinIn~\href{https://linkedin.com/in/aum-patel-48025a2bb}{Aum Patel}\quad\AND\quad
+        \faGithub~\href{https://github.com/Aum-Patel1234}{Github}\quad\AND\quad
+        \faLaptopCode~\href{https://leetcode.com/u/Aum-Jayraj-Patel/}{Leetcode}
+    }
+\end{minipage}%
+\hfill
+\begin{minipage}[t]{0.22\textwidth}
+  \vspace{0pt}
+  \begin{center}
+    \begin{tikzpicture}
+      \clip (0,0) circle (1.5cm); % circle radius
+      % move the image up by 0.25 cm
+      \node at (0,-0.3) {\includegraphics[width=3cm]{aum_img.jpeg}};
+    \end{tikzpicture}
+  \end{center}
+\end{minipage}
+
+
+
+\vspace{0.1cm}
+
+
+
+    % \vspace{0.3 cm - 0.3 cm}
+
+
+
+    \section{Education}
+        
+        % \begin{twocolentry}{
+            
+\vspace{0.2 cm}
+
+% College Education
+\begin{twocolentry}{
+    \textit{2022 - 2026}}
+\textbf{Vivekanand Education Society Institute of Technology}
+\end{twocolentry}
+
+\vspace{0.10 cm}
+\begin{onecolentry}
+    \begin{highlights}
+        \item BE in Artificial Intelligence and Data Science
+        \item CGPA: 9.45/10 (up to Semester 6) 
+    \end{highlights}
+\end{onecolentry}
+
+\vspace{0.2 cm}
+
+% 12th Grade
+\begin{twocolentry}{
+    \textit{2020 - 2022}}
+    \textbf{Lakshya Prep High School and Junior College}
+\end{twocolentry}
+
+\vspace{0.10 cm}
+\begin{onecolentry}
+    \begin{highlights}
+        \item 12th Grade - HSC: 67%
+    \end{highlights}
+\end{onecolentry}
+
+\vspace{0.2 cm}
+
+% 10th Grade
+\begin{twocolentry}{
+    \textit{2020}}
+    \textbf{OLPS High School}
+\end{twocolentry}
+
+\vspace{0.10 cm}
+\begin{onecolentry}
+    \begin{highlights}
+        \item 10th Grade - SSC: 90.20%
+    \end{highlights}
+\end{onecolentry}
+
+
+
+        
+    %     \begin{twocolentry}{
+    %     \textit{Cupertino, CA}    
+            
+    %     \textit{June 2005 – Aug 2007}}
+    %         \textbf{Software Engineer}
+            
+    %         \textit{Apple}
+    %     \end{twocolentry}
+
+    %     \vspace{0.10 cm}
+    %     \begin{onecolentry}
+    %         \begin{highlights}
+    %             \item Reduced time to render user buddy lists by 75\% by implementing a prediction algorithm
+    %             \item Integrated iChat with Spotlight Search by creating a tool to extract metadata from saved chat transcripts and provide metadata to a system-wide search database
+    %             \item Redesigned chat file format and implemented backward compatibility for search
+    %         \end{highlights}
+    %     \end{onecolentry}
+
+
+    %     \vspace{0.2 cm}
+
+    %     \begin{twocolentry}{
+    %     \textit{Redmond, WA}    
+            
+    %     \textit{June 2003 – Aug 2003}}
+    %         \textbf{Software Engineer Intern}
+            
+    %         \textit{Microsoft}
+    %     \end{twocolentry}
+
+    %     \vspace{0.10 cm}
+    %     \begin{onecolentry}
+    %         \begin{highlights}
+    %             \item Designed a UI for the VS open file switcher (Ctrl-Tab) and extended it to tool windows
+    %             \item Created a service to provide gradient across VS and VS add-ins, optimizing its performance via caching
+    %             \item Built an app to compute the similarity of all methods in a codebase, reducing the time from $\mathcal{O}(n^2)$ to $\mathcal{O}(n \log n)$
+    %             \item Created a test case generation tool that creates random XML docs from XML Schema
+    %             \item Automated the extraction and processing of large datasets from legacy systems using SQL and Perl scripts
+    %         \end{highlights}
+    %     \end{onecolentry}
+
+
+
+    
+    % \section{Publications}
+
+
+
+        
+    %     \begin{samepage}
+    %         \begin{twocolentry}{
+    %             Jan 2004
+    %         }
+    %             \textbf{3D Finite Element Analysis of No-Insulation Coils}
+
+    %             \vspace{0.10 cm}
+
+    %             \mbox{Frodo Baggins}, \mbox{\textbf{\textit{Aum Patel}}}, \mbox{Samwise Gamgee}
+    %         \end{twocolentry}
+
+
+    %         \vspace{0.10 cm}
+
+    %         \begin{onecolentry}
+    %     \href{https://doi.org/10.1109/TASC.2023.3340648}{10.1109/TASC.2023.3340648}
+    %         \end{onecolentry}
+    %     \end{samepage}
+
+
+% You can continue to add more about your interests, goals, and experiences here.
+
+
+    
+    \section{Projects}
+        
+        % \begin{twocolentry}{
+        \vspace{0.2 cm}
+
+% WhatsApp Clone Project
+\begin{twocolentry}{
+    \textit{\href{https://github.com/Aum-Patel1234/Flutter-Projects/tree/master/whatsapp_clone}{\color{black}{WhatsApp Clone}}}}
+    \textbf{WhatsApp Clone with Real-Time Chat and Group Messaging}
+\end{twocolentry}
+
+\vspace{0.10 cm}
+\begin{onecolentry}
+    \begin{highlights}
+        \item Implemented a \textbf{real-time chat application} using \textbf{Firebase} and \textbf{Streams}, allowing seamless communication between users.
+        \item Integrated a \textbf{group chat feature}, supporting \textbf{multi-user interactions} in a chat environment.
+        \item \textbf{Tools Used}: Flutter, Firebase, Bloc, RxDart
+    \end{highlights}
+\end{onecolentry}
+
+\vspace{0.2 cm}
+
+% Todo App with Local Storage
+\begin{twocolentry}{
+    \textit{\href{https://github.com/Aum-Patel1234/Flutter-Projects/tree/master/todo_app_localstorage}{\color{black}{Todo App}}}}
+    \textbf{Offline Task Management App using Flutter and Sqflite}
+\end{twocolentry}
+
+\vspace{0.10 cm}
+\begin{onecolentry}
+    \begin{highlights}
+        \item Built a \textbf{Flutter-based Todo application} with \textbf{local data persistence} using \textbf{Sqflite}.
+        \item Integrated \textbf{Bloc} for state management and \textbf{fl\_chart} for visualizing task statistics.
+        \item \textbf{Tools Used}: Flutter, Sqflite, flutter\_bloc, fl\_chart.
+    \end{highlights}
+\end{onecolentry}
+\vspace{0.2 cm}
+
+% % AutoML App Project
+\begin{twocolentry}{
+    \textit{\href{https://github.com/Aum-Patel1234/Auto-ML}{\color{black}{AutoML App}}}}
+    \textbf{AutoML Web Application with Django Backend}
+\end{twocolentry}
+
+\vspace{0.10 cm}
+\begin{onecolentry}
+    \begin{highlights}
+        \item \textbf{Built} an AutoML web app using \textbf{Django}, integrating automated \textbf{model selection}, training, data preprocessing, feature engineering, and hyperparameter tuning to minimize manual effort.
+        \item \textbf{Technologies:} Python, Django, Scikit-learn, Pandas, NumPy.
+    \end{highlights}
+\end{onecolentry}
+
+\vspace{0.2 cm}
+% JKB Education Backend Project
+\begin{twocolentry}{
+    \textit{\href{https://github.com/Swaraj2004/jkb-backend}{\color{black}{jkb-backend}}}}
+    \textbf{RESTful API Backend for \href{https://jkbeducation.com/}{\color{black}JKB Education Platform}}
+\end{twocolentry}
+
+\vspace{0.10 cm}
+\begin{onecolentry}
+    \begin{highlights}
+    \item Built a \textbf{scalable RESTful backend} for the JKB Education platform using \textbf{Express.js} and \textbf{Prisma ORM} with \textbf{PostgreSQL}.
+    \item Implemented \textbf{secure authentication} and \textbf{role-based access} using \textbf{JWT} and middleware for route protection.
+    \item Used \textbf{Supabase} for hosted PostgreSQL, enabling seamless \textbf{type-safe queries} and \textbf{scalable data storage}.
+    \end{highlights}
+\end{onecolentry}
+
+    
+\section{Technical Skills and Coursework}
+
+\begin{onecolentry}
+    \textbf{Languages:} Java, Python, Dart, C, SQL, JavaScript \\
+    \textbf{Technologies:} Flutter, Django, Firebase, Git, GitHub, Tkinter, MongoDB, Scikit-learn, Pandas, NumPy, Bloc \\
+    \textbf{Coursework:} Data Structures, Computer Networks, Database Management Systems, OOPS, Machine Learning
+\end{onecolentry}
+
+
+    % Certificates Section
+\section*{Certificates}
+
+\begin{itemize}[leftmargin=*, itemsep=0pt, topsep=0pt]
+    \item INVICTUS HACKATHON -  \href{https://drive.google.com/file/d/1ItDT6zJNX-dR8Q9L2tRwCX0G1nKjzWyE/view?usp=sharing}{View Certificate}
+    \item V-Code competition - \href{https://drive.google.com/file/d/1HHi6MovOpgedT_TI621zTQGj8My7PCKO/view?usp=sharing}{View Certificate}
+   \item AWS Cloud Foundations / Cloud Developing – 
+\href{https://www.credly.com/badges/abbcc651-a313-481c-824c-65259956e28e/public_url}{Certificate},
+\href{https://www.credly.com/badges/63bb92de-2471-45a1-adab-fa77cd652c18}{Certificate}
+    \item Academic Results - \href{https://drive.google.com/drive/folders/1Iw67umZSwyV2NDYWwHCU7l4OKAHH8wb5?usp=sharing}{View Certificate}
+
+\end{itemize}
+
+    
+    
+\end{document}
